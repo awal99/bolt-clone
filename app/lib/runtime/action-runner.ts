@@ -5,6 +5,7 @@ import type { BoltAction } from '~/types/actions';
 import { createScopedLogger } from '~/utils/logger';
 import { unreachable } from '~/utils/unreachable';
 import type { ActionCallbackData } from './message-parser';
+import type { ReadableStreamDefaultReader } from '@cloudflare/workers-types';
 
 const logger = createScopedLogger('ActionRunner');
 
@@ -149,6 +150,57 @@ export class ActionRunner {
     logger.debug(`Process terminated with code ${exitCode}`);
   }
 
+  async runShellActionCus(content:string, earlyStopStream:boolean=true) {
+   
+    const webcontainer = await this.#webcontainer;
+
+    const process = await webcontainer.spawn('jsh', ['-c', content], {
+      env: { npm_config_yes: true },
+    });
+
+    const exitCode = await process.exit;
+
+    logger.debug(`Process terminated with code ${exitCode}`);
+
+    let response = ''
+    let charsReceived = 0;
+    let itrs = 0;
+
+    const chunkD:Array<string> = []
+
+    const reader = process.output.getReader()
+
+    reader.read().then(function processText({ done, value }: ReadableStreamReadResult<string>): Promise<void> | void {
+
+      if (value) {
+        charsReceived += value.length;
+        itrs += 1
+        console.log(value)
+        chunkD.push(value);
+      }else{
+        console.log("no value")
+      }
+
+      // Result objects contain two properties:
+      // done  - true if the stream has already given you all its data.
+      // value - some data. Always undefined when done is true.
+      if (earlyStopStream && charsReceived >= 100) {
+        console.log(done,"Stream complete");
+        console.log(chunkD);
+        return;
+      }else{
+        console.log(charsReceived)
+       // console.log(value)
+      }
+      
+      // Read some more, and call this function again
+      return reader.read().then(processText);
+    });
+
+    return chunkD;
+
+  }
+
   async #runFileAction(action: ActionState) {
     if (action.type !== 'file') {
       unreachable('Expected file action');
@@ -183,4 +235,5 @@ export class ActionRunner {
 
     this.actions.setKey(id, { ...actions[id], ...newState });
   }
+
 }

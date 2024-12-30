@@ -282,3 +282,12 @@ export const CONTINUE_PROMPT = stripIndents`
   Continue your prior response. IMPORTANT: Immediately begin from where you left off without any interruptions.
   Do not repeat any content, including artifact and action tags.
 `;
+
+
+export const GIT_SETUP_PROMPT = `install isomophic-git, use isomophic-git to do the following:
+1. initialize git repo and add all changes 
+2. commit all changes locally
+3. ignore node_modules and .env from the commit
+3. add .env file with the new environment variables in the git-setup.js file
+4. update the git-setup.js file, before pushing pushing to git make sure to checkout to the main branch
+5. update the git-setup.js file, add code to push the changes to github`
