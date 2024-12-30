@@ -20,8 +20,18 @@ git clone https://github.com/username/project-name.git
 cd project-name
 ```
 
+2. Create a `.env.local` file in the root directory and make a copy of the fields in the example.env file into .env.local and fill in the appropriate values:
 
-2. Install dependencies
+Optionally, you can set the debug level:
+
+```
+VITE_LOG_LEVEL=debug
+```
+
+**Important**: Never commit your `.env.local` file to version control. It's already included in .gitignore.
+
+
+3. Install dependencies
 
 ```bash
 npm install
@@ -40,13 +50,15 @@ or
 yarn dev
 ```
 
+
+
 ### Pushing your generated code to git
 
 The system comes with a custom jsh which allows for executing some shells commands and scripts specifically in node and webAssemble. Most of the unix shell commands would not work as the base service (webcontainer) runs the jsh in a node environment and do not run directly on unix.
 
 use the isomorphic-git cli to complete your git tasks
 
-[text](https://isomorphic-git.org/docs/en/alphabetic)
+[Isomorphic-git](https://isomorphic-git.org/docs/en/alphabetic)
 
 The application will be available at `http://localhost:5173`
 
