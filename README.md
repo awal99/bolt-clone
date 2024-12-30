@@ -16,7 +16,7 @@ These instructions will help you get a copy of the project up and running on you
 1. Clone the repository
 
 ```bash
-git clone https://github.com/username/project-name.git
+git clone https://github.com/awal99/bolt-clone.git
 cd project-name
 ```
 
@@ -61,6 +61,13 @@ use the isomorphic-git cli to complete your git tasks
 [Isomorphic-git](https://isomorphic-git.org/docs/en/alphabetic)
 
 The application will be available at `http://localhost:5173`
+
+
+### Future Development
+
+1. Complete git button implementation - this feature would allow for a one click sync of generated project on git.
+2. Add ability to download generated project.
+3. Enable options for user to select different models to use, currently works with Anthropic's Claude bedrock
 
 ## Built With
 
